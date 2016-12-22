@@ -94,12 +94,4 @@ class Ec2
             }
         }
     }
-    
-    public function getSnapshotsOfImage($ami_id)
-    {
-        $reply = $this->ec2->describeImages([
-            "ImageIds" => [$ami_id],
-        ]);
-        var_dump($reply);
-    }
 }
