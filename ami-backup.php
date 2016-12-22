@@ -1,5 +1,11 @@
 <?php
 
+function error($message, $status)
+{
+    file_put_contents("php://stderr", $message . "\n");
+    exit($status);
+}
+
 function main($args)
 {
     require_once __DIR__ . "/vendor/autoload.php";
@@ -10,12 +16,15 @@ function main($args)
         $options->parse(); // TODO: use $args after fixing Ulrichsg\Getopt
     }
     catch (UnexpectedValueException $e) {
-        file_put_contents("php://stderr", $options->getHelpText());
-        exit(1);
+        error($options->getHelpText(), 1);
     }
     if ($options->getOption("help")) {
-        file_put_contents("php://stderr", $options->getHelpText());
-        exit(0);
+        error($options->getHelpText(), 0);
+    }
+    
+    $rotate = $options->getOption("rotate");
+    if ($rotate < 1) {
+        error("--rotate must be greater than 0.", 1);
     }
     
     $meta_data = new InstanceMetaData();
@@ -23,14 +32,13 @@ function main($args)
     $region = $meta_data->getRegion();
     
     $ec2 = new Ec2($options->getOption("profile"), $region);
-    $name = $ec2->getName($instance_id);
-    if ($name === null) {
-        $name = $instance_id;
+    $instance_name = $ec2->getName($instance_id);
+    if ($instance_name === null) {
+        error("this instance doesn't have a Name tag.", 1);
     }
-    $name = "$name-" . date("Ymd-His");
-    $ec2->createImage($instance_id, $name);
-    //$this->deleteOldImages($vol["id"], $count);
-    //$backup->run($instance_id, $options->getOption("rotate"));
+    
+    $ec2->deleteOldImages($instance_name, $rotate - 1);
+    $ec2->createImage($instance_id, $instance_name);
 }
 
 main($_SERVER["argv"]);
