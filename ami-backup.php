@@ -17,6 +17,10 @@ function main($args)
         file_put_contents("php://stderr", $options->getHelpText());
         exit(0);
     }
+    
+    $meta_data = new InstanceMetaData();
+    $instance_id = $meta_data->getInstanceId();
+    $region = $meta_data->getRegion();
 }
 
 main($_SERVER["argv"]);
