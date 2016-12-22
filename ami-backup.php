@@ -23,8 +23,8 @@ function main($args)
     }
     
     $rotate = $options->getOption("rotate");
-    if ($rotate < 1) {
-        error("--rotate must be greater than 0.", 1);
+    if ($rotate !== null && $rotate < 1) {
+        error("Rotation count must be greater than 0.", 1);
     }
     
     $meta_data = new InstanceMetaData();
@@ -34,10 +34,13 @@ function main($args)
     $ec2 = new Ec2($options->getOption("profile"), $region);
     $instance_name = $ec2->getName($instance_id);
     if ($instance_name === null) {
-        error("this instance doesn't have a Name tag.", 1);
+        error("This instance doesn't have a Name tag.", 1);
     }
     
-    $ec2->deleteOldImages($instance_name, $rotate - 1);
+    if ($rotate) {
+        $ec2->deleteOldImages($instance_name, $rotate - 1);
+    }
+    
     $ec2->createImage($instance_id, $instance_name);
 }
 

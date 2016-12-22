@@ -11,7 +11,6 @@ class Options extends Getopt
             (new Option("r", "rotate", Getopt::REQUIRED_ARGUMENT))
                 ->setDescription("How many AMIs should be saved")
                 ->setArgument(new Argument(null, null, "count"))
-                ->setDefaultValue(5)
                 ->setValidation("is_numeric"),
             (new Option("p", "profile", Getopt::REQUIRED_ARGUMENT))
                 ->setDescription("Name of profile written in ~/.aws/credentials")
