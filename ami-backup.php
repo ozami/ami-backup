@@ -21,6 +21,16 @@ function main($args)
     $meta_data = new InstanceMetaData();
     $instance_id = $meta_data->getInstanceId();
     $region = $meta_data->getRegion();
+    
+    $ec2 = new Ec2($options->getOption("profile"), $region);
+    $name = $ec2->getName($instance_id);
+    if ($name === null) {
+        $name = $instance_id;
+    }
+    $name = "$name-" . date("Ymd-His");
+    $ec2->createImage($instance_id, $name);
+    //$this->deleteOldImages($vol["id"], $count);
+    //$backup->run($instance_id, $options->getOption("rotate"));
 }
 
 main($_SERVER["argv"]);
