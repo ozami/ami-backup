@@ -1,0 +1,20 @@
+{
+    "name": "coroq/ebs-backup",
+    "description": "Back up AWS EC2 into AMI.",
+    "autoload": {
+        "psr-4": {
+            "": "lib/"
+        }
+    },
+    "require": {
+        "aws/aws-sdk-php": "^2.8",
+        "ulrichsg/getopt-php": "^2.3"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ozawa Masayuki",
+            "email": "ozawa@coroq.com"
+        }
+    ]
+}
